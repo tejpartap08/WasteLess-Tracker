@@ -251,10 +251,6 @@
         alert("Quantity must be a positive integer.");
         return;
       }
-      if (new Date(expiry) < new Date(new Date().toDateString())) {
-        alert("Expiry date cannot be in the past.");
-        return;
-      }
 
       foodList.push({ name, quantity, expiry });
 
