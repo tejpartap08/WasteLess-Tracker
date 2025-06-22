@@ -283,25 +283,38 @@
 
       if (chart) chart.destroy();
 
-      chart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ["Saved", "Expired"],
-          datasets: [{
-            label: 'Food Status',
-            data: [saved, expired],
-            backgroundColor: ["#28a745", "#dc3545"]
-          }]
+  chart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Saved', 'Expired'],
+    datasets: [{
+      label: 'Quantity',
+      data: [saved, expired],
+      backgroundColor: ['#28a745', '#dc3545'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
         },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-            },
-          }
+        title: {
+          display: true,
+          text: 'Number of Items'
         }
-      });
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      }
+    }
+  }
+});     
     }
 
     // Initial render
