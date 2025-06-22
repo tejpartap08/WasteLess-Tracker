@@ -16,7 +16,7 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background: linear-gradient(-45deg, #ffecd2, #fcb69f, #ff7e5f, #feb47b);
+      background: linear-gradient(-45deg, #3a8ddb, #6f42c1, #00d2ff, #5eead4);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
       color: #333;
@@ -27,16 +27,16 @@
       margin-bottom: 1rem;
       font-weight: 700;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #4a2c2a;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+      color: #ffffff;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
     }
     .container {
       max-width: 720px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
     input, button {
       padding: 10px;
@@ -48,8 +48,8 @@
     }
     input:focus, button:focus {
       outline: none;
-      box-shadow: 0 0 5px #ff7e5f;
-      border-color: #ff7e5f;
+      box-shadow: 0 0 5px #6f42c1;
+      border-color: #6f42c1;
     }
     input[type="number"] {
       width: 80px;
@@ -58,13 +58,13 @@
       width: 220px;
     }
     button {
-      background-color: #ff7e5f;
+      background-color: #3a8ddb;
       color: white;
       border: none;
       cursor: pointer;
     }
     button:hover {
-      background-color: #f95e3d;
+      background-color: #2c75be;
     }
     table {
       width: 100%;
@@ -114,14 +114,14 @@
     }
     .links a {
       margin: 0 10px;
-      color: #ff7e5f;
+      color: #6f42c1;
       text-decoration: none;
       font-weight: 600;
       border-bottom: 1px solid transparent;
       transition: border-color 0.3s ease;
     }
     .links a:hover {
-      border-color: #ff7e5f;
+      border-color: #6f42c1;
     }
   </style>
 </head>
@@ -130,34 +130,31 @@
     <img class="header-graphic" src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Food icon" />
     <h1>WasteLess - Food Expiry Tracker</h1>
 
-    <input type="text" id="foodName" placeholder="Food Name 🍎" aria-label="Food Name" />
-    <input type="number" id="quantity" placeholder="Quantity" min="1" aria-label="Quantity" />
-    <input type="date" id="expiryDate" aria-label="Expiry Date" />
-    <button onclick="addItem()" aria-label="Add food item">Add Item</button>
+    <input type="text" id="foodName" placeholder="Food Name 🍎" />
+    <input type="number" id="quantity" placeholder="Quantity" min="1" />
+    <input type="date" id="expiryDate" />
+    <button onclick="addItem()">Add Item</button>
 
-    <input type="text" id="filterInput" placeholder="Filter food items..." aria-label="Filter food items" oninput="renderTable()" />
+    <input type="text" id="filterInput" placeholder="Filter food items..." oninput="renderTable()" />
 
-    <table aria-live="polite" aria-label="Food expiry list">
+    <table>
       <thead>
-        <tr>
-          <th>Food</th><th>Qty</th><th>Expiry</th><th>Days Left</th><th>Action</th>
-        </tr>
+        <tr><th>Food</th><th>Qty</th><th>Expiry</th><th>Days Left</th><th>Action</th></tr>
       </thead>
       <tbody id="foodTable"></tbody>
     </table>
 
     <div id="summary"></div>
 
-    <canvas id="wasteChart" height="120" aria-label="Food status chart" role="img"></canvas>
+    <canvas id="wasteChart" height="120"></canvas>
 
     <div class="audio-control">
-      <button id="audioBtn" aria-label="Play 'Food added' in Spanish">🔊 Play confirmation sound (Spanish)</button>
+      <button id="audioBtn">🔊 Play Confirmation Sound</button>
     </div>
 
-    <div class="links" aria-label="Helpful links">
-      <a href="https://www.foodwise.com.au/" target="_blank" rel="noopener noreferrer">Food Waste Tips</a>
-      <a href="https://www.fao.org/food-loss-and-food-waste/en/" target="_blank" rel="noopener noreferrer">FAO Info</a>
-      <a href="https://www.epa.gov/recycle/reducing-wasted-food-home" target="_blank" rel="noopener noreferrer">How to Store Food</a>
+    <div class="links">
+      <a href="https://www.foodwise.com.au/" target="_blank">Food Waste Tips</a>
+      <a href="https://www.epa.gov/recycle/reducing-wasted-food-home" target="_blank">Storage Advice</a>
     </div>
   </div>
 
@@ -168,12 +165,8 @@
     const audioBtn = document.getElementById("audioBtn");
     let chart;
 
-    // Load audio for alternative language confirmation (Spanish)
-    const audio = new Audio('https://actions.google.com/sounds/v1/human_voices/positive_chime.ogg'); // example sound
-
-    audioBtn.onclick = () => {
-      audio.play();
-    };
+    const audio = new Audio('https://actions.google.com/sounds/v1/human_voices/positive_chime.ogg');
+    audioBtn.onclick = () => audio.play();
 
     function formatDate(dateStr) {
       const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -190,12 +183,9 @@
     function renderTable() {
       const filter = document.getElementById('filterInput').value.toLowerCase();
       table.innerHTML = "";
-
-      // Sort by expiry date ascending
       foodList.sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
 
       let totalQuantity = 0;
-      let totalItems = foodList.length;
 
       foodList.forEach((item, index) => {
         if (!item.name.toLowerCase().includes(filter)) return;
@@ -204,116 +194,75 @@
         totalQuantity += Number(item.quantity);
 
         const row = document.createElement("tr");
-
-        if (diff < 0) {
-          row.classList.add("expired");
-        } else if (diff <= 3) {
-          row.classList.add("near-expiry");
-        }
-
-        // Add food emoji dynamically based on name (simple example)
-        const emoji = item.name.toLowerCase().includes("apple") ? "🍎" :
-                      item.name.toLowerCase().includes("banana") ? "🍌" :
-                      item.name.toLowerCase().includes("milk") ? "🥛" :
-                      item.name.toLowerCase().includes("bread") ? "🍞" :
-                      "🍽️";
+        if (diff < 0) row.classList.add("expired");
+        else if (diff <= 3) row.classList.add("near-expiry");
 
         row.innerHTML = `
-          <td>${emoji} ${item.name}</td>
+          <td>${item.name}</td>
           <td>${item.quantity}</td>
           <td>${formatDate(item.expiry)}</td>
           <td>${diff < 0 ? "Expired" : diff}</td>
-          <td><button onclick="removeItem(${index})" aria-label="Delete ${item.name}">Delete</button></td>
+          <td><button onclick="removeItem(${index})">Delete</button></td>
         `;
         table.appendChild(row);
       });
 
-      summary.textContent = `Total Items: ${totalItems} | Total Quantity: ${totalQuantity}`;
-
+      summary.textContent = `Total Items: ${foodList.length} | Total Quantity: ${totalQuantity}`;
       localStorage.setItem("foodList", JSON.stringify(foodList));
       drawChart();
     }
 
     function addItem() {
-      const nameInput = document.getElementById("foodName");
-      const quantityInput = document.getElementById("quantity");
-      const expiryInput = document.getElementById("expiryDate");
+      const name = document.getElementById("foodName").value.trim();
+      const quantity = Number(document.getElementById("quantity").value);
+      const expiry = document.getElementById("expiryDate").value;
 
-      const name = nameInput.value.trim();
-      const quantity = Number(quantityInput.value);
-      const expiry = expiryInput.value;
-
-      if (!name || !quantity || !expiry) {
-        alert("Please fill all fields.");
-        return;
-      }
-      if (quantity <= 0 || !Number.isInteger(quantity)) {
-        alert("Quantity must be a positive integer.");
-        return;
-      }
+      if (!name || !quantity || !expiry) return alert("Fill all fields.");
+      if (quantity <= 0 || !Number.isInteger(quantity)) return alert("Quantity must be a positive number.");
 
       foodList.push({ name, quantity, expiry });
 
-      nameInput.value = "";
-      quantityInput.value = "";
-      expiryInput.value = "";
+      document.getElementById("foodName").value = "";
+      document.getElementById("quantity").value = "";
+      document.getElementById("expiryDate").value = "";
 
       renderTable();
-
-      // Play audio feedback on add
       audio.play();
     }
 
     function removeItem(index) {
-      if (index >= 0 && index < foodList.length) {
-        foodList.splice(index, 1);
-        renderTable();
-      }
+      foodList.splice(index, 1);
+      renderTable();
     }
 
     function drawChart() {
       const ctx = document.getElementById("wasteChart").getContext("2d");
-
       const expired = foodList.filter(item => new Date(item.expiry) < new Date()).reduce((sum, i) => sum + Number(i.quantity), 0);
       const saved = foodList.reduce((sum, i) => sum + Number(i.quantity), 0) - expired;
 
       if (chart) chart.destroy();
 
-  chart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Saved', 'Expired'],
-    datasets: [{
-      label: 'Quantity',
-      data: [saved, expired],
-      backgroundColor: ['#28a745', '#dc3545'],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1
+      chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ["Saved", "Expired"],
+          datasets: [{
+            label: 'Food Status',
+            data: [saved, expired],
+            backgroundColor: ["#00d2ff", "#6f42c1"]
+          }]
         },
-        title: {
-          display: true,
-          text: 'Number of Items'
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+            },
+          }
         }
-      }
-    },
-    plugins: {
-      legend: {
-        display: false
-      }
-    }
-  }
-});     
+      });
     }
 
-    // Initial render
     renderTable();
   </script>
 </body>
